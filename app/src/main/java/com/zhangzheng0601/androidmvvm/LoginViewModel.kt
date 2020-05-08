@@ -35,6 +35,7 @@ class LoginViewModel :
     var isChecked: ObservableBoolean = ObservableBoolean()
 
     var onLoginClick = View.OnClickListener {
+
         val verifyResult = model.verification(username.get(), password.get())
         if (!TextUtils.isEmpty(verifyResult)) {
             view.showToast(verifyResult!!)
@@ -47,6 +48,20 @@ class LoginViewModel :
             } else {
                 onLoginFail(message)
             }
+        }
+
+    }
+
+    var onClearClick = View.OnClickListener {
+        username.set("")
+        password.set("")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        if (model.isCheckedRemember()) {
+            username.set(model.getUserName())
+            password.set(model.getPassword())
+            isChecked.set(model.isCheckedRemember())
         }
     }
 
@@ -62,19 +77,5 @@ class LoginViewModel :
 
     private fun onLoginFail(message: String?) {
         view.showToast(message ?: "登陆失败")
-    }
-
-
-    var onClearClick = View.OnClickListener {
-        username.set("")
-        password.set("")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        if (model.isCheckedRemember()) {
-            username.set(model.getUserName())
-            password.set(model.getPassword())
-            isChecked.set(model.isCheckedRemember())
-        }
     }
 }
